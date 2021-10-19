@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dataModel"
+            type="com.asgatech.recycleradapterlib.data.ItemModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium"
+        app:cardBackgroundColor="#fff"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:padding="@dimen/medium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@{dataModel.username}"
+                android:textAlignment="viewStart"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                tools:text="Username" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@{dataModel.username}"
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="Username" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>
