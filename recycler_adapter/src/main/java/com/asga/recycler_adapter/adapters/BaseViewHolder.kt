@@ -1,8 +1,9 @@
-package com.asga.recycler_adapter
+package com.asga.recycler_adapter.adapters
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.asga.recycler_adapter.BR
 import java.util.*
 
 open class BaseViewHolder<Binding : ViewDataBinding, DM:Any> : RecyclerView.ViewHolder {

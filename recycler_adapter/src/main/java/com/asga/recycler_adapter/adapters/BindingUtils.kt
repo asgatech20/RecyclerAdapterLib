@@ -1,4 +1,4 @@
-package com.asga.recycler_adapter
+package com.asga.recycler_adapter.adapters
 
 import android.content.Context
 import android.os.Build
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.asga.recycler_adapter.R
 
 @BindingAdapter(value = ["updateAdapter"])
 fun updateAdapter(recyclerView: RecyclerView, data: MutableLiveData<List<Any>>?) {
@@ -84,8 +85,8 @@ fun setTotalItemCount(recyclerView: RecyclerView, totalItemCount: ObservableInt?
     if (totalItemCount == null) return
     totalItemCount.addOnPropertyChangedCallback(object : OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
-            if (recyclerView.adapter != null && recyclerView.adapter is BaseLoaderAdapter<*,*>)
-                    (recyclerView.adapter as BaseLoaderAdapter<*,*>?)!!.setTotalItemCount(
+            if (recyclerView.adapter != null && recyclerView.adapter is BaseLoaderAdapter<*, *>)
+                    (recyclerView.adapter as BaseLoaderAdapter<*, *>?)!!.setTotalItemCount(
                 totalItemCount.get()
             )
         }

@@ -3,7 +3,7 @@ package com.asgatech.recycleradapterlib
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.asga.recycler_adapter.BaseAdapter
+import com.asga.recycler_adapter.adapters.BaseAdapter
 import com.asgatech.recycleradapterlib.data.ItemModel
 import com.asgatech.recycleradapterlib.databinding.ActivityMainBinding
 import com.asgatech.recycleradapterlib.databinding.LayoutItemRowBinding
@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private fun setAdapter() {
         // init the adapter and set assign it as the recycler adapter
         adapter = BaseAdapter(R.layout.layout_item_row)
-        binding!!.recycler.adapter = adapter
     }
 
 

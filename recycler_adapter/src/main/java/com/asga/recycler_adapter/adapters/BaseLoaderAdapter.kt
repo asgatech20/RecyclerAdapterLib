@@ -1,4 +1,4 @@
-package com.asga.recycler_adapter
+package com.asga.recycler_adapter.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +10,8 @@ import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.databinding.ObservableInt
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.asga.recycler_adapter.BR
+import com.asga.recycler_adapter.R
 import com.asga.recycler_adapter.databinding.LoadRowBinding
 
 

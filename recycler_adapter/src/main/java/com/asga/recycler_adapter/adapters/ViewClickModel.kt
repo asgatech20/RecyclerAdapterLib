@@ -1,4 +1,4 @@
-package com.asga.recycler_adapter
+package com.asga.recycler_adapter.adapters
 
 import androidx.annotation.IdRes
 
