@@ -1,12 +1,14 @@
 package com.asgatech.recycleradapterlib
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.asga.recycler_adapter.adapters.BaseAdapter
 import com.asgatech.recycleradapterlib.data.ItemModel
 import com.asgatech.recycleradapterlib.databinding.ActivityMainBinding
 import com.asgatech.recycleradapterlib.databinding.LayoutItemRowBinding
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var adapter: BaseAdapter<LayoutItemRowBinding, ItemModel>? = null
@@ -19,8 +21,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        // init the adapter and set assign it as the recycler adapter
+        //init the adapter and set assign it as the recycler adapter
+        val handler = Handler()
+        handler.postDelayed( {
+            binding!!.recycler.stopLoading(recycler, true)
+        }, 5000)
         adapter = BaseAdapter(R.layout.layout_item_row)
+        //this line to handle start or stop shimmer animation using code
+
     }
 
 

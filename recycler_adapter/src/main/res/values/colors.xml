@@ -6,6 +6,7 @@
     <color name="colorPrimaryDark">#212735</color>
     <color name="colorAccent">#EB2543</color>
     <color name="borderColorGray">#252432</color>
+    <color name="greyColor">#e0e0e0</color>
 
 
 </resources>
