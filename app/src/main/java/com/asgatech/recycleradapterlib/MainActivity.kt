@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private fun setAdapter() {
         // init the adapter and set assign it as the recycler adapter
         adapter = BaseAdapter(R.layout.layout_item_row)
+        binding!!.recycler.setAdapter(adapter!!)
     }
 
 
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         itemsList.add(ItemModel("John Doe", "johndoe@gmail.com"))
 
         // pass the data to the adapter
-        adapter!!.setDataList(itemsList)
+        adapter!!.setData(itemsList)
     }
 
 }
