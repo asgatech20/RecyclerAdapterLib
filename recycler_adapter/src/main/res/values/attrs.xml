@@ -9,5 +9,14 @@
         <attr name="shimmerLoadingViewRes" format="reference" />
         <attr name="customLoadingViewRes" format="reference" />
         <attr name="shimmerRowCount" format="integer" />
+
+        <attr name="gridCount" format="integer" />
+
+        <attr name="layoutManagerType" format="enum">
+            <enum name="vertical" value="0" />
+            <enum name="horizontal" value="1" />
+            <enum name="verticalGrid" value="2" />
+            <enum name="horizontalGrid" value="3" />
+        </attr>
     </declare-styleable>
 </resources>

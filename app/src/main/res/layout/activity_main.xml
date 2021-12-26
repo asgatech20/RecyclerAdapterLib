@@ -17,6 +17,8 @@
             app:shimmerLoadingViewRes="@layout/layout_loading_row"
             app:loadingView="shimmerLoading"
             app:shimmerRowCount="20"
+            app:layoutManagerType="horizontalGrid"
+            app:gridCount="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

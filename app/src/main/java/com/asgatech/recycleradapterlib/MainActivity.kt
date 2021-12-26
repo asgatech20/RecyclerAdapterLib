@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
             binding!!.recycler.stopLoading(recycler, true)
         }, 5000)
         adapter = BaseAdapter(R.layout.layout_item_row)
-        //this line to handle start or stop shimmer animation using code
 
+        binding!!.recycler.setAdapter(adapter!!)
     }
 
 
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         itemsList.add(ItemModel("John Doe", "johndoe@gmail.com"))
 
         // pass the data to the adapter
-        adapter!!.setDataList(itemsList)
+        adapter!!.setData(itemsList)
     }
 
 }

@@ -20,6 +20,11 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 
 
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.asga.recycler_adapter.adapters.BaseAdapter
+
 /**
  * @Author: Muhammad Noamany
  * @Date: 12/21/2021
@@ -37,6 +42,9 @@ class AsgaRecyclerView : RelativeLayout {
     private var shimmerLoadingViewRes: Int = -1
     private var shimmerRowCount: Int = 1
 
+
+    private var layoutManager: Int = 0
+    private var gridCount: Int = 0
 
     constructor(context: Context?) :
             super(context, null)
@@ -64,6 +72,7 @@ class AsgaRecyclerView : RelativeLayout {
 
     /**
      * Fetch attr from xml view or init with the default values
+     * @layoutManager the layout manager type for the recycler
      */
     private fun readXmlAttr(typedAttributeSet: TypedArray) {
         loadingView =
@@ -74,6 +83,11 @@ class AsgaRecyclerView : RelativeLayout {
             typedAttributeSet.getResourceId(R.styleable.AsgaRecyclerView_customLoadingViewRes, R.color.greyColor)
         shimmerRowCount =
             typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_shimmerRowCount, -1)
+
+        layoutManager =
+            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_layoutManagerType, 0)
+        gridCount =
+            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_gridCount, 2)
     }
 
     /**
@@ -89,6 +103,10 @@ class AsgaRecyclerView : RelativeLayout {
      */
     private fun initRecyclerView() {
         recyclerView = RecyclerView(context)
+        recyclerView.layoutParams = RecyclerView.LayoutParams(
+            RecyclerView.LayoutParams.MATCH_PARENT,
+            RecyclerView.LayoutParams.MATCH_PARENT
+        )
         addView(recyclerView)
     }
     /**
@@ -198,5 +216,29 @@ class AsgaRecyclerView : RelativeLayout {
             loadingContainer.visibility = View.GONE
         else
             loadingContainer.visibility = View.VISIBLE
+
+
+    /**
+     * set the adapter for the recycler view
+     */
+    fun setAdapter(adapter: BaseAdapter<*, *>) {
+        setLayoutManager()
+        recyclerView.adapter = adapter;
+    }
+
+    /**
+     * Set the layout manager type according to the xml value type
+     */
+    private fun setLayoutManager() {
+        when (layoutManager) {
+            0 -> recyclerView.layoutManager = // case vertical layout manager
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            1 -> recyclerView.layoutManager =  // case horizontal layout manager
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            2 -> recyclerView.layoutManager =  // case vertical grid manager
+                GridLayoutManager(context, gridCount, RecyclerView.VERTICAL, false)
+            3 -> recyclerView.layoutManager =  // case horizontal grid manager
+                GridLayoutManager(context, gridCount, RecyclerView.HORIZONTAL, false)
+        }
     }
 }
