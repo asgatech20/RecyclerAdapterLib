@@ -9,6 +9,5 @@
         <attr name="shimmerLoadingViewRes" format="reference" />
         <attr name="customLoadingViewRes" format="reference" />
         <attr name="shimmerRowCount" format="integer" />
-
     </declare-styleable>
 </resources>
