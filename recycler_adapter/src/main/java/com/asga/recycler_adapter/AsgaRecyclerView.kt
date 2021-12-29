@@ -32,13 +32,9 @@ class AsgaRecyclerView : RelativeLayout {
     private lateinit var shimmerContainer: ShimmerFrameLayout
     private var emptyViewRes: Int = 1
     private var loadingView: Int = 1
-
     private var customLoadingViewRes: Int = -1
-
     private var shimmerLoadingViewRes: Int = -1
     private var shimmerRowCount: Int = 1
-
-
     private var layoutManager: Int = 0
     private var gridCount: Int = 0
 
@@ -68,8 +64,6 @@ class AsgaRecyclerView : RelativeLayout {
 
     /**
      * Fetch attr from xml view or init with the default values
-     * @layoutManager the layout manager type for the recycler
-     * @emptyViewRes the layout resource to show in case of empty data in the attached recycler
      */
     private fun readXmlAttr(typedAttributeSet: TypedArray) {
         loadingView =
@@ -155,6 +149,9 @@ class AsgaRecyclerView : RelativeLayout {
         addView(loadingContainer)
     }
 
+    /**
+     * Configuring of loading view
+     */
     private fun initLoadingContainer() {
         loadingContainer = RelativeLayout(context)
         loadingContainer.layoutParams = LayoutParams(
@@ -181,18 +178,17 @@ class AsgaRecyclerView : RelativeLayout {
         }
     }
 
+    /**
+     * Inflate the loading view as progress bar loading
+     */
     private fun addProgressLoadingViewToLoadingContainer() {
         var defaultLoadingView = ProgressBar(context)
         loadingContainer.addView(defaultLoadingView)
     }
 
-    private fun addShimmerLoadingViewToLoadingContainer() {
-        //build Shimmer Container
-        buildShimmerContainer()
-        //Adding the shimmerContainer to the some view
-        loadingContainer.addView(shimmerContainer)
-    }
-
+    /**
+     * Inflate the loading view from custom layout passed by the users
+     */
     private fun addCustomLoadingViewToLoadingContainer() {
         val customLoadingView = inflate(
             context,
@@ -202,6 +198,19 @@ class AsgaRecyclerView : RelativeLayout {
         loadingContainer.addView(customLoadingView)
     }
 
+    /**
+     * Inflate the loading view from custom layout passed by the users as Shimmer animation loading
+     */
+    private fun addShimmerLoadingViewToLoadingContainer() {
+        //build Shimmer Container
+        buildShimmerContainer()
+        //Adding the shimmerContainer to the some view
+        loadingContainer.addView(shimmerContainer)
+    }
+
+    /**
+     * Configure the shimmer animation
+     */
     private fun buildShimmerContainer() {
         var shimmer = createShimmer()
         val shimmerLoadingView = inflate(
@@ -209,13 +218,29 @@ class AsgaRecyclerView : RelativeLayout {
             shimmerLoadingViewRes, null
         )
         //Creating the shimmer frame layout
-        createShimmerFrameLayout(shimmerLoadingView, shimmer)
+        createShimmerFrameLayout()
     }
 
-    private fun createShimmerFrameLayout(
-        shimmerLoadingView: View,
-        shimmer: Shimmer?
-    ) {
+    /**
+     * Initialize shimmer builder
+     */
+    private fun createShimmer(): Shimmer? {
+        //Create shimmer builder
+        shimmerBuilder = Shimmer.ColorHighlightBuilder()
+            .setDuration(1200)
+            .setIntensity(0.9f)
+            .setDropoff(0.9f)
+            .setBaseAlpha(0.6f)
+            .setHighlightAlpha(1f)
+        //Create shimmer
+        var shimmer = shimmerBuilder.build()
+        return shimmer
+    }
+
+    /**
+     * Create shimmer animation frame container
+     */
+    private fun createShimmerFrameLayout() {
         shimmerContainer = ShimmerFrameLayout(context)
         shimmerContainer.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -233,19 +258,9 @@ class AsgaRecyclerView : RelativeLayout {
         shimmerContainer.showShimmer(true)
     }
 
-    private fun createShimmer(): Shimmer? {
-        //Create shimmer builder
-        shimmerBuilder = Shimmer.ColorHighlightBuilder()
-            .setDuration(1200)
-            .setIntensity(0.9f)
-            .setDropoff(0.9f)
-            .setBaseAlpha(0.6f)
-            .setHighlightAlpha(1f)
-        //Create shimmer
-        var shimmer = shimmerBuilder.build()
-        return shimmer
-    }
-
+    /**
+     * Update the shimmer animation color
+     */
     fun updateShimmerColor(hexShimmerBaseColor: Int, hexShimmerHighLightColor: Int) {
         shimmerBuilder.setBaseColor(hexShimmerBaseColor)
             ?.setHighlightColor(hexShimmerHighLightColor)
