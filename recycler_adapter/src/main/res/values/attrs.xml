@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AsgaRecyclerView">
-        <attr name="loadingView" format="enum" >
+        <attr name="loadingView" format="enum">
             <enum name="progressLoading" value="1" />
             <enum name="customLoading" value="2" />
             <enum name="shimmerLoading" value="3" />
         </attr>
+        <attr name="emptyViewRes" format="reference" />
         <attr name="shimmerLoadingViewRes" format="reference" />
         <attr name="customLoadingViewRes" format="reference" />
         <attr name="shimmerRowCount" format="integer" />

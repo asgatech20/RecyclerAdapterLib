@@ -4,31 +4,38 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.asga.recycler_adapter.adapters.BaseAdapter
+import com.asga.recycler_adapter.adapters.BasePaginationAdapter
 import com.asgatech.recycleradapterlib.data.ItemModel
 import com.asgatech.recycleradapterlib.databinding.ActivityMainBinding
 import com.asgatech.recycleradapterlib.databinding.LayoutItemRowBinding
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private var adapter: BaseAdapter<LayoutItemRowBinding, ItemModel>? = null
+    private var adapter: BasePaginationAdapter<LayoutItemRowBinding, ItemModel>? = null
     private var binding: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setAdapter()
-        initMockData()
     }
 
     private fun setAdapter() {
+        adapter = BasePaginationAdapter(R.layout.layout_item_row)
+        binding!!.recycler.setAdapter(adapter!!)
+        adapter!!.setPaginationHandler(object : BasePaginationAdapter.PaginationHandler<ItemModel> {
+            override fun onLoadMore(page: Int, totalRows: Int) {
+                val handler = Handler()
+                handler.postDelayed({
+                    initMockData()
+                }, 5000)
+            }
+        })
         //init the adapter and set assign it as the recycler adapter
         val handler = Handler()
-        handler.postDelayed( {
-            binding!!.recycler.stopLoading(recycler, true)
+        handler.postDelayed({
+            binding!!.recycler.setLoadingStatus(true)
+            initMockData()
         }, 5000)
-        adapter = BaseAdapter(R.layout.layout_item_row)
 
-        binding!!.recycler.setAdapter(adapter!!)
     }
 
 
@@ -48,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         itemsList.add(ItemModel("John Doe", "johndoe@gmail.com"))
 
         // pass the data to the adapter
-        adapter!!.setData(itemsList)
+        adapter!!.updateDataList(itemsList)
+        binding!!.recycler.setShowEmpty(itemsList.isEmpty())
     }
 
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asga.recycler_adapter.BR
 import com.asga.recycler_adapter.R
 import com.asga.recycler_adapter.databinding.LoadRowBinding
+import com.asga.recycler_adapter.view_holders.BaseViewHolder
 
 
 open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdapter<Binding, DM> {
@@ -19,10 +20,9 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
     private var loading = false
     private var currentPage = 0
 
-    constructor(@LayoutRes rowRes: Int, paginationHandler: PaginationHandler<DM>) : this(
+    constructor(@LayoutRes rowRes: Int) : this(
         rowRes,
         BR.dataModel,
-        paginationHandler,
         0
     )
 
@@ -30,17 +30,15 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
     constructor(
         @LayoutRes rowRes: Int,
         bindingVariable: Int,
-        paginationHandler: PaginationHandler<DM>,
         initialPage: Int = 0
     ) : super(rowRes = rowRes, bindingVariable = bindingVariable) {
         this.currentPage = initialPage
-        setPaginationHandler(paginationHandler)
     }
 
     /**
      * Init the pagination implementation
      */
-    private fun setPaginationHandler(paginationHandler: PaginationHandler<DM>) {
+    fun setPaginationHandler(paginationHandler: PaginationHandler<DM>) {
         this.paginationHandler = paginationHandler
         if (recyclerView != null) setupPagination(recyclerView!!)
     }
@@ -52,10 +50,9 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
         recyclerView.addOnScrollListener(object :
             EndlessScrollListener(recyclerView.layoutManager!!) {
             override fun onLoadMore(page: Int, items: Int) {
-                if (isEmpty() || loading) return
+                if (loading) return
                 paginationHandler.onLoadMore(++currentPage, items)
                 enableLoading()
-
             }
         })
     }
@@ -71,6 +68,7 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
         )
         else super.onCreateViewHolder(parent, viewType)
     }
+
 
     /**
      * Return the paginated loading row layout and setting its width and height params according to the layout manager orientation
@@ -106,9 +104,25 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
     }
 
     /**
+     * Set the data list items to the adapter and notify the change
+     */
+    override fun setData(data: List<DM>) {
+        hideLoading()
+        super.setData(data)
+    }
+
+    /**
+     * Called if you want to update the dataList of adapter and notify the change
+     */
+    override fun updateDataList(newData: List<DM>) {
+        hideLoading()
+        super.updateDataList(newData)
+    }
+
+    /**
      * show the pagination loading row
      */
-    fun enableLoading() {
+    private fun enableLoading() {
         if (dataList != null && dataList!!.size > 0 && dataList!![dataList!!.size - 1] != null) {
             dataList!!.add(null)
             loading = true
@@ -119,7 +133,7 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
     /**
      * hide the pagination loading row
      */
-    fun hideLoading() {
+    private fun hideLoading() {
         if (dataList != null && dataList!!.size >= 1 && dataList!![dataList!!.size - 1] == null) {
             dataList!!.removeAt(dataList!!.size - 1)
             notifyItemRemoved(dataList!!.size)

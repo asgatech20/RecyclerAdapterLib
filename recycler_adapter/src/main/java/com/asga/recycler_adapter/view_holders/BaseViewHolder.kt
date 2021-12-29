@@ -1,9 +1,10 @@
-package com.asga.recycler_adapter.adapters
+package com.asga.recycler_adapter.view_holders
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.asga.recycler_adapter.BR
+import com.asga.recycler_adapter.data.ViewClickModel
 import java.util.*
 
 /**
@@ -96,7 +97,7 @@ open class BaseViewHolder<Binding : ViewDataBinding, DM : Any> : RecyclerView.Vi
     /**
      * Bind the row view and its data to it
      */
-    open fun onBind(position: Int, dm: DM, itemCount: Int) {
+    open fun onBind(position: Int, dm: DM?, itemCount: Int) {
         this.itemCount = itemCount
         dataModel = dm
         bindView(position)

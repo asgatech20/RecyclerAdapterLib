@@ -2,9 +2,7 @@ package com.asga.recycler_adapter.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
-import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.asga.recycler_adapter.BR
+import com.asga.recycler_adapter.data.ViewClickModel
+import com.asga.recycler_adapter.view_holders.BaseViewHolder
 import java.util.*
 
 open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adapter<ViewHolder>() {
@@ -76,7 +76,7 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
     /**
      * Set the data list items to the adapter and notify the change
      */
-    fun setData(data: List<DM>) {
+    open fun setData(data: List<DM>) {
         dataList = data.toMutableList()
         notifyDataSetChanged()
     }
@@ -86,16 +86,14 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
      * If there no items so it set the dataList to the @newData
      * If there is already items in the adapter so it append the data to the existed one
      */
-    @CallSuper
-    fun updateDataList(@NonNull newData: List<DM>): BaseAdapter<Binding, DM> {
+    open fun updateDataList(newData: List<DM>) {
         if (dataList == null || dataList!!.isEmpty()) // case adapter dataList has no data yet
             setData(newData);
         else { // case update current data and append the sent data to it
-            dataList!!.plus(newData);
+            dataList!!.addAll(newData);
             notifyItemRangeInserted(dataList!!.size - newData.size, dataList!!.size);
             notifyItemChanged(dataList!!.size - (newData.size + 1));
         }
-        return this;
     }
 
     /**
@@ -145,9 +143,10 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
         return super.getItemViewType(position)
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder is BaseViewHolder<*, *>) {
-            (holder as BaseViewHolder<Binding, DM>).onBind(position, getItem(position)!!, itemCount)
+            (holder as BaseViewHolder<Binding, DM>).onBind(position, getItem(position), itemCount)
         }
     }
 
@@ -206,6 +205,11 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
             return layoutManager!!.orientation == orientation
         }
         return false
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
     }
     /***************************************************************************************************************************/
 }
