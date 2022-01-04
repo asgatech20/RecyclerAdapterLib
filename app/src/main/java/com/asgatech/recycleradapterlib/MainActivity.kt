@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
                 val handler = Handler()
                 handler.postDelayed({
                     initMockData()
+                    adapter!!.setCanLoad(false)
                 }, 5000)
             }
         })

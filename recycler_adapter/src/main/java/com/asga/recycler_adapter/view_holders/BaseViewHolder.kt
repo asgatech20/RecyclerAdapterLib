@@ -8,20 +8,12 @@ import com.asga.recycler_adapter.data.ViewClickModel
 import java.util.*
 
 /**
- * @Author: Muhammad Noamany
- * @Date: 12/22/2021
- * @Email: muhammadnoamany@gmail.com
- */
-
-
-/**
  * BaseViewHolder for using on BaseAdapters as a RecyclerView.ViewHolder
  * @Binding -> the viewBinding of recycler row layout
  * @DM -> the data class to be set and viewed in the recycler row
  */
 open class BaseViewHolder<Binding : ViewDataBinding, DM : Any> : RecyclerView.ViewHolder {
     var binding: Binding? = null
-    private var cLickListener: RowCLickListener<Binding, DM>? = null
     private var viewClickModels: List<ViewClickModel<Binding, DM>>? = null
     private var bindingVariable = -1
     private var dataModel: DM? = null

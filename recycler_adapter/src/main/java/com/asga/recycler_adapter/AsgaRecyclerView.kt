@@ -16,17 +16,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asga.recycler_adapter.adapters.BaseAdapter
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 
-/**
- * @Author: Muhammad Noamany
- * @Date: 12/21/2021
- * @Email: muhammadnoamany@gmail.com
- */
 class AsgaRecyclerView : RelativeLayout {
+    private val NORMAL_LOADING_VIEW_TYPE = 1
+    private val CUSTOM_LOADING_VIEW_TYPE = 2
+    private val SHIMMER_LOADING_VIEW_TYPE = 3
+    private val DEAFULT_KEYS_VALUE = -1
+    private val VERTICAL_LAOUT_MANAGER = 0
+    private val HORIZONTAL_LAOUT_MANAGER = 1
+    private val VERTICAL_GRID_LAOUT_MANAGER = 2
+    private val HORIZONTAL_GRID_LAOUT_MANAGER = 3
     private lateinit var emptyViewContainer: RelativeLayout
-    private lateinit var shimmerBuilder: Shimmer.ColorHighlightBuilder
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingContainer: RelativeLayout
     private lateinit var shimmerContainer: ShimmerFrameLayout
@@ -67,9 +68,15 @@ class AsgaRecyclerView : RelativeLayout {
      */
     private fun readXmlAttr(typedAttributeSet: TypedArray) {
         loadingView =
-            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_loadingView, 1)
+            typedAttributeSet.getInt(
+                R.styleable.AsgaRecyclerView_loadingView,
+                NORMAL_LOADING_VIEW_TYPE
+            )
         emptyViewRes =
-            typedAttributeSet.getResourceId(R.styleable.AsgaRecyclerView_emptyViewRes, -1)
+            typedAttributeSet.getResourceId(
+                R.styleable.AsgaRecyclerView_emptyViewRes,
+                DEAFULT_KEYS_VALUE
+            )
         shimmerLoadingViewRes =
             typedAttributeSet.getResourceId(
                 R.styleable.AsgaRecyclerView_shimmerLoadingViewRes,
@@ -81,12 +88,18 @@ class AsgaRecyclerView : RelativeLayout {
                 R.color.greyColor
             )
         shimmerRowCount =
-            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_shimmerRowCount, -1)
+            typedAttributeSet.getInt(
+                R.styleable.AsgaRecyclerView_shimmerRowCount,
+                DEAFULT_KEYS_VALUE
+            )
 
         layoutManager =
-            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_layoutManagerType, 0)
+            typedAttributeSet.getInt(
+                R.styleable.AsgaRecyclerView_layoutManagerType,
+                VERTICAL_LAOUT_MANAGER
+            )
         gridCount =
-            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_gridCount, 2)
+            typedAttributeSet.getInt(R.styleable.AsgaRecyclerView_gridCount, DEAFULT_KEYS_VALUE)
     }
 
     /**
@@ -164,15 +177,15 @@ class AsgaRecyclerView : RelativeLayout {
         loadingContainer.setBackgroundColor(Color.parseColor("#00000000"))
         when (loadingView) {
             //case 1 : show normal progress if no custom passed
-            1 -> {
+            NORMAL_LOADING_VIEW_TYPE -> {
                 addProgressLoadingViewToLoadingContainer()
             }
             //case 2 : show custom loading
-            2 -> {
+            CUSTOM_LOADING_VIEW_TYPE -> {
                 addCustomLoadingViewToLoadingContainer()
             }
             //case 3 : show shimmer loading
-            3 -> {
+            SHIMMER_LOADING_VIEW_TYPE -> {
                 addShimmerLoadingViewToLoadingContainer()
             }
         }
@@ -203,38 +216,9 @@ class AsgaRecyclerView : RelativeLayout {
      */
     private fun addShimmerLoadingViewToLoadingContainer() {
         //build Shimmer Container
-        buildShimmerContainer()
+        createShimmerFrameLayout()
         //Adding the shimmerContainer to the some view
         loadingContainer.addView(shimmerContainer)
-    }
-
-    /**
-     * Configure the shimmer animation
-     */
-    private fun buildShimmerContainer() {
-        var shimmer = createShimmer()
-        val shimmerLoadingView = inflate(
-            context,
-            shimmerLoadingViewRes, null
-        )
-        //Creating the shimmer frame layout
-        createShimmerFrameLayout()
-    }
-
-    /**
-     * Initialize shimmer builder
-     */
-    private fun createShimmer(): Shimmer? {
-        //Create shimmer builder
-        shimmerBuilder = Shimmer.ColorHighlightBuilder()
-            .setDuration(1200)
-            .setIntensity(0.9f)
-            .setDropoff(0.9f)
-            .setBaseAlpha(0.6f)
-            .setHighlightAlpha(1f)
-        //Create shimmer
-        var shimmer = shimmerBuilder.build()
-        return shimmer
     }
 
     /**
@@ -248,22 +232,12 @@ class AsgaRecyclerView : RelativeLayout {
         )
         var linear = LinearLayout(context)
         linear.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        // linear.setBackgroundColor(Color.parseColor("#B00020"))
-
         linear.orientation = LinearLayout.VERTICAL
         for (i in 0..shimmerRowCount) {
             LayoutInflater.from(context).inflate(shimmerLoadingViewRes, linear, true)
         }
         shimmerContainer.addView(linear)
         shimmerContainer.showShimmer(true)
-    }
-
-    /**
-     * Update the shimmer animation color
-     */
-    fun updateShimmerColor(hexShimmerBaseColor: Int, hexShimmerHighLightColor: Int) {
-        shimmerBuilder.setBaseColor(hexShimmerBaseColor)
-            ?.setHighlightColor(hexShimmerHighLightColor)
     }
 
     /**
@@ -279,13 +253,16 @@ class AsgaRecyclerView : RelativeLayout {
      */
     private fun setLayoutManager() {
         when (layoutManager) {
-            0 -> recyclerView.layoutManager = // case vertical layout manager
+            VERTICAL_LAOUT_MANAGER -> recyclerView.layoutManager = // case vertical layout manager
                 LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            1 -> recyclerView.layoutManager =  // case horizontal layout manager
+            HORIZONTAL_LAOUT_MANAGER -> recyclerView.layoutManager =
+                    // case horizontal layout manager
                 LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            2 -> recyclerView.layoutManager =  // case vertical grid manager
+            VERTICAL_GRID_LAOUT_MANAGER -> recyclerView.layoutManager =
+                    // case vertical grid manager
                 GridLayoutManager(context, gridCount, RecyclerView.VERTICAL, false)
-            3 -> recyclerView.layoutManager =  // case horizontal grid manager
+            HORIZONTAL_GRID_LAOUT_MANAGER -> recyclerView.layoutManager =
+                    // case horizontal grid manager
                 GridLayoutManager(context, gridCount, RecyclerView.HORIZONTAL, false)
         }
     }

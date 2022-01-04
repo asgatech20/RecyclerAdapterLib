@@ -19,6 +19,7 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
     private lateinit var paginationHandler: PaginationHandler<DM>
     private var loading = false
     private var currentPage = 0
+    private var canLoadMore = true
 
     constructor(@LayoutRes rowRes: Int) : this(
         rowRes,
@@ -50,10 +51,15 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
         recyclerView.addOnScrollListener(object :
             EndlessScrollListener(recyclerView.layoutManager!!) {
             override fun onLoadMore(page: Int, items: Int) {
-                if (loading) return
+                if (loading || !canLoad()) return
                 paginationHandler.onLoadMore(++currentPage, items)
                 enableLoading()
             }
+
+            /**
+             * Return if adapter can load more data
+             */
+            private fun canLoad() = canLoadMore
         })
     }
 
@@ -139,6 +145,13 @@ open class BasePaginationAdapter<Binding : ViewDataBinding, DM : Any> : BaseAdap
             notifyItemRemoved(dataList!!.size)
             loading = false
         }
+    }
+
+    /**
+     * set the adapter if can load more data or not
+     */
+    fun setCanLoad(canLoadMore: Boolean) {
+        this.canLoadMore = canLoadMore
     }
 
     /**

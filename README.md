@@ -21,7 +21,7 @@ Reference the library from your module's build.gradle:
 ``` gradle
 dependencies {
     [...]
-    implementation 'com.github.asgatech20:NetworkLib:1.0'
+    implementation 'com.github.asgatech20:RecyclerAdapterLib:{LibVersion}'
 }
 ```
 

@@ -22,6 +22,7 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
     protected var layoutInflater: LayoutInflater? = null
     private var rowClickListener: BaseViewHolder.RowCLickListener<Binding, DM>? = null
     private var disableEmptyRow = false
+    private val NULL_VIEW = -1
 
     @LayoutRes
     private var emptyViewRes = 0
@@ -129,7 +130,7 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
     }
 
     protected open fun bindView(parent: ViewGroup?, rowRes: Int): Binding? {
-        return if (rowRes == -1) null else DataBindingUtil.inflate(
+        return if (rowRes == NULL_VIEW) null else DataBindingUtil.inflate(
             layoutInflater!!,
             rowRes,
             parent,
