@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.asga.recycler_adapter.BR
 import com.asga.recycler_adapter.data.ViewClickModel
 import com.asga.recycler_adapter.view_holders.BaseViewHolder
-import java.util.*
 
 open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adapter<ViewHolder>() {
 
@@ -21,6 +20,7 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
     protected var dataList: MutableList<DM?>? = null
     protected var layoutInflater: LayoutInflater? = null
     private var rowClickListener: BaseViewHolder.RowCLickListener<Binding, DM>? = null
+    private var viewClickModels: List<ViewClickModel<Binding, DM>>? = null
     private var disableEmptyRow = false
     private val NULL_VIEW = -1
 
@@ -124,7 +124,9 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
         if (layoutInflater == null) layoutInflater = LayoutInflater.from(parent.context)
         baseViewHolder = BaseViewHolder(
             bindView(parent, rowRes) as Binding,
-            bindingVariable
+            getRowClickListener(),
+            bindingVariable,
+            viewClickModels
         )
         return baseViewHolder as BaseViewHolder<Binding, DM>
     }
@@ -151,6 +153,9 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
         }
     }
 
+    protected open fun getRowClickListener(): BaseViewHolder.RowCLickListener<Binding, DM>? {
+        return rowClickListener
+    }
 
     /********************************************************** Helpers *************************************************/
 
@@ -165,22 +170,25 @@ open class BaseAdapter<Binding : ViewDataBinding, DM : Any> constructor() : Adap
     /**
      * set click listeners to a certain view ids in the row
      */
-    fun setViewClickModels(viewClickModels: List<ViewClickModel<Binding, DM>>?) {
-        baseViewHolder!!.setViewClickModels(viewClickModels)
+    fun setViewClickModels(viewClickModels: List<ViewClickModel<Binding, DM>>?): BaseAdapter<Binding, DM> {
+        this.viewClickModels = viewClickModels
+        return this
     }
 
     /**
      * Add a click listener to a certain view id in the row
      */
-    fun addViewClickModel(viewClickModel: ViewClickModel<Binding, DM>) {
+    fun addViewClickModel(viewClickModel: ViewClickModel<Binding, DM>): BaseAdapter<Binding, DM> {
         baseViewHolder!!.addViewClickModel(viewClickModel)
+        return this
     }
 
     /**
      * Set listener of row click
      */
-    fun setRowClickListener(rowClickListener: BaseViewHolder.RowCLickListener<Binding, DM>) {
-        baseViewHolder!!.setRowClickListener(rowClickListener)
+    fun setRowClickListener(rowClickListener: BaseViewHolder.RowCLickListener<Binding, DM>): BaseAdapter<Binding, DM> {
+        this.rowClickListener = rowClickListener
+        return this
     }
 
     /**

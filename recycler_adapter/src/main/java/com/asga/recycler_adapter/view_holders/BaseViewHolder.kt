@@ -5,7 +5,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.asga.recycler_adapter.BR
 import com.asga.recycler_adapter.data.ViewClickModel
-import java.util.*
 
 /**
  * BaseViewHolder for using on BaseAdapters as a RecyclerView.ViewHolder
@@ -30,6 +29,17 @@ open class BaseViewHolder<Binding : ViewDataBinding, DM : Any> : RecyclerView.Vi
         this.bindingVariable = bindingVariable
     }
 
+    constructor(
+        binding: Binding,
+        rowCLickListener: RowCLickListener<Binding, DM>?,
+        bindingVariable: Int,
+        viewClickModels: List<ViewClickModel<Binding, DM>>?,
+    ) : super(binding.root) {
+        this.binding = binding
+        this.bindingVariable = bindingVariable
+        setRowClickListener(rowCLickListener)
+        setViewClickModels(viewClickModels)
+    }
     /**************************************************************************************************************/
 
     /**
