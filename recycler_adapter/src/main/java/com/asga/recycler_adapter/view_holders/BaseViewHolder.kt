@@ -1,54 +1,82 @@
-package com.asga.recycler_adapter
+package com.asga.recycler_adapter.view_holders
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
+import com.asga.recycler_adapter.BR
+import com.asga.recycler_adapter.data.ViewClickModel
 
-open class BaseViewHolder<Binding : ViewDataBinding, DM:Any> : RecyclerView.ViewHolder {
+/**
+ * BaseViewHolder for using on BaseAdapters as a RecyclerView.ViewHolder
+ * @Binding -> the viewBinding of recycler row layout
+ * @DM -> the data class to be set and viewed in the recycler row
+ */
+open class BaseViewHolder<Binding : ViewDataBinding, DM : Any> : RecyclerView.ViewHolder {
     var binding: Binding? = null
-    open var cLickListener: RowCLickListener<Binding, DM>? = null
-    open var viewClickModels: List<ViewClickModel<Binding, DM>>? = null
-    open var bindingVariable = -1
-    open var dataModel: DM? = null
+    private var viewClickModels: List<ViewClickModel<Binding, DM>>? = null
+    private var bindingVariable = -1
+    private var dataModel: DM? = null
     private var itemCount = 0
 
+    /****************************************** Constructors of the class **************************************/
     constructor(binding: Binding) : this(binding, -1)
-
-    constructor(binding: Binding, bindingVariable: Int) : this(binding, null, bindingVariable, null)
-
 
     constructor(
         binding: Binding,
-        cLickListener: RowCLickListener<Binding, DM>?,
-        bindingVariable: Int,
-        viewClickModels: List<ViewClickModel<Binding, DM>>?
+        bindingVariable: Int
     ) : super(binding.root) {
         this.binding = binding
-        this.cLickListener = cLickListener
         this.bindingVariable = bindingVariable
+    }
+
+    constructor(
+        binding: Binding,
+        rowCLickListener: RowCLickListener<Binding, DM>?,
+        bindingVariable: Int,
+        viewClickModels: List<ViewClickModel<Binding, DM>>?,
+    ) : super(binding.root) {
+        this.binding = binding
+        this.bindingVariable = bindingVariable
+        setRowClickListener(rowCLickListener)
         setViewClickModels(viewClickModels)
     }
+    /**************************************************************************************************************/
 
-    open fun addViewClickModel(viewClickModel: ViewClickModel<Binding, DM>?): BaseViewHolder<Binding, DM>? {
+    /**
+     * Add a click listener to a certain view id in the row
+     */
+    fun addViewClickModel(viewClickModel: ViewClickModel<Binding, DM>?): BaseViewHolder<Binding, DM>? {
         if (viewClickModels == null) viewClickModels = ArrayList()
         viewClickModels!!.plus(viewClickModel)
-        setListeners()
+        setViewCLickListeners()
         return this
     }
 
-    open fun setViewClickModels(viewClickModels: List<ViewClickModel<Binding, DM>>?): BaseViewHolder<Binding, DM>? {
+    /**
+     * set click listeners to a certain view ids in the row
+     */
+    fun setViewClickModels(viewClickModels: List<ViewClickModel<Binding, DM>>?): BaseViewHolder<Binding, DM>? {
         this.viewClickModels = viewClickModels
-        setListeners()
+        setViewCLickListeners()
         return this
     }
 
-    private fun setListeners() {
+    /**
+     * Set listener of row click
+     */
+    fun setRowClickListener(cLickListener: RowCLickListener<Binding, DM>?) {
         if (cLickListener != null) itemView.setOnClickListener {
             cLickListener!!.onRowClicked(
                 binding!!, adapterPosition, dataModel
             )
         }
+    }
+
+    /**
+     * Set listener of view ids clicks
+     */
+    private fun setViewCLickListeners() {
+
         if (viewClickModels != null && viewClickModels!!.isNotEmpty())
             for (model in viewClickModels!!)
                 if (itemView.findViewById<View?>(model.viewId) != null)
@@ -68,13 +96,16 @@ open class BaseViewHolder<Binding : ViewDataBinding, DM:Any> : RecyclerView.View
         bindView(position)
     }
 
-    open fun onBind(position: Int, dm: DM, itemCount: Int) {
+    /**
+     * Bind the row view and its data to it
+     */
+    open fun onBind(position: Int, dm: DM?, itemCount: Int) {
         this.itemCount = itemCount
         dataModel = dm
         bindView(position)
     }
 
-    private  fun bindView(position: Int) {
+    private fun bindView(position: Int) {
         try {
             binding!!.setVariable(BR.position, position)
             binding!!.setVariable(BR.itemCount, itemCount)

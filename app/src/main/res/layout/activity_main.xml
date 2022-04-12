@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.asga.recycler_adapter.AsgaRecyclerView
             android:id="@+id/recycler"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:padding="@dimen/huge"
+            app:emptyViewRes="@layout/layout_loading_row"
+            app:gridCount="3"
+            app:layoutManagerType="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setVerticalLayoutManager="@{true}" />
+            app:loadingView="progressLoading"
+            app:shimmerLoadingViewRes="@layout/layout_loading_row"
+            app:shimmerRowCount="20" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -39,7 +39,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:indeterminateTint="@color/colorPrimaryDark"
-            android:visibility="@{isBar?View.VISIBLE:View.GONE}" />
+            android:visibility="@{!isBar?View.VISIBLE:View.GONE}" />
 
 
         <ProgressBar
