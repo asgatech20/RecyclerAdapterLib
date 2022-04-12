@@ -1,27 +1,55 @@
 package com.asgatech.recycleradapterlib
 
 import android.os.Bundle
+import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.asga.recycler_adapter.BaseAdapter
+import com.asga.recycler_adapter.adapters.BasePaginationAdapter
+import com.asga.recycler_adapter.view_holders.BaseViewHolder
 import com.asgatech.recycleradapterlib.data.ItemModel
 import com.asgatech.recycleradapterlib.databinding.ActivityMainBinding
 import com.asgatech.recycleradapterlib.databinding.LayoutItemRowBinding
 
 class MainActivity : AppCompatActivity() {
-    private var adapter: BaseAdapter<LayoutItemRowBinding, ItemModel>? = null
+    private var adapter: BasePaginationAdapter<LayoutItemRowBinding, ItemModel>? = null
     private var binding: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setAdapter()
-        initMockData()
     }
 
     private fun setAdapter() {
-        // init the adapter and set assign it as the recycler adapter
-        adapter = BaseAdapter(R.layout.layout_item_row)
-        binding!!.recycler.adapter = adapter
+        adapter = BasePaginationAdapter(R.layout.layout_item_row)
+        binding!!.recycler.setAdapter(adapter!!)
+        adapter!!.setPaginationHandler(object : BasePaginationAdapter.PaginationHandler<ItemModel> {
+            override fun onLoadMore(page: Int, totalRows: Int) {
+                val handler = Handler()
+                handler.postDelayed({
+                    initMockData()
+                    adapter!!.setCanLoad(false)
+                }, 5000)
+            }
+        })
+        adapter!!.setRowClickListener(object :
+            BaseViewHolder.RowCLickListener<LayoutItemRowBinding, ItemModel> {
+            override fun onRowClicked(
+                binding: LayoutItemRowBinding?,
+                position: Int,
+                dataModel: ItemModel?
+            ) {
+                Toast.makeText(this@MainActivity, dataModel!!.username, Toast.LENGTH_LONG).show()
+            }
+
+        })
+        //init the adapter and set assign it as the recycler adapter
+        val handler = Handler()
+        handler.postDelayed({
+            binding!!.recycler.setLoadingStatus(true)
+            initMockData()
+        }, 5000)
+
     }
 
 
@@ -41,7 +69,8 @@ class MainActivity : AppCompatActivity() {
         itemsList.add(ItemModel("John Doe", "johndoe@gmail.com"))
 
         // pass the data to the adapter
-        adapter!!.setDataList(itemsList)
+        adapter!!.updateDataList(itemsList)
+        binding!!.recycler.setShowEmpty(itemsList.isEmpty())
     }
 
 }
